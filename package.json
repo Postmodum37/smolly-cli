@@ -2,7 +2,7 @@
   "name": "smolly-cli",
   "version": "1.0.0",
   "description": "CLI app for things and stuff",
-  "main": "bin/index.js",
+  "main": "./bin/index.js",
   "bin": {
     "smolly": "./bin/index.js"
   },
@@ -12,6 +12,12 @@
   "author": "Tomas Novikovas",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^5.0.1"
+    "chalk": "^5.0.1",
+    "commander": "^9.0.0",
+    "conf": "^10.1.1"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=17.0.0"
   }
 }
