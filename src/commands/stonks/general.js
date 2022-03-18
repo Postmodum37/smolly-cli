@@ -1,10 +1,11 @@
 import { table } from 'table';
-import chalk from 'chalk';
 import finnhub from 'finnhub';
+import { success, error } from '../../utils/colors.js';
 import { getWatchlist } from './watchlist.js';
 
-const DEFAULT_SYMBOLS = ['AAPL', 'MSFT'];
-const HEADERS = [
+// Local constants
+const defaultSymbols = ['AAPL', 'MSFT'];
+const headers = [
   'Stock',
   'Price',
   'Price (High)',
@@ -12,9 +13,13 @@ const HEADERS = [
   'Change',
   'Change %',
 ];
+
+// Finnhub API client setup
 const api_key = finnhub.ApiClient.instance.authentications['api_key'];
 api_key.apiKey = 'test-api-key';
 const finnhubClient = new finnhub.DefaultApi();
+
+// Table logging configuration
 const tableConfig = {
   columns: [
     { alignment: 'right' },
@@ -29,9 +34,13 @@ const tableConfig = {
 export function fetch(symbol) {
   symbol = symbol.toUpperCase();
 
-  fetchQuote(symbol).then((quote) => {
-    logTable([prepareData(quote)]);
-  });
+  fetchQuote(symbol)
+    .then((quote) => {
+      logTable([prepareData(quote)]);
+    })
+    .catch(() => {
+      console.error(error('Something went wrong, please try again.'));
+    });
 }
 
 export function stonks() {
@@ -40,7 +49,7 @@ export function stonks() {
   let symbols;
 
   if (!Array.isArray(watchlist) || !watchlist.length) {
-    symbols = DEFAULT_SYMBOLS;
+    symbols = defaultSymbols;
   } else {
     symbols = watchlist;
   }
@@ -49,33 +58,15 @@ export function stonks() {
     promises.push(fetchQuote(symbol));
   }
 
-  Promise.all(promises).then((quotes) => {
-    const data = quotes.map((quote) => prepareData(quote));
+  Promise.all(promises)
+    .then((quotes) => {
+      const data = quotes.map((quote) => prepareData(quote));
 
-    logTable(data);
-  });
-}
-
-// TODO: Fix colors of prefixes and suffixes
-function prepareData(quote) {
-  return [
-    quote.symbol,
-    `$${quote.c}`,
-    `$${quote.h}`,
-    `$${quote.l}`,
-    `$${colorNumberMessage(quote.d.toFixed(2))}`,
-    `${colorNumberMessage(quote.dp.toFixed(2))}%`,
-  ];
-}
-
-function colorNumberMessage(number) {
-  if (number > 0) {
-    return chalk.green(number);
-  } else if (number < 0) {
-    return chalk.red(number);
-  } else {
-    return chalk.white(number);
-  }
+      logTable(data);
+    })
+    .catch(() => {
+      console.error(error('Something went wrong, please try again.'));
+    });
 }
 
 function fetchQuote(symbol) {
@@ -85,15 +76,36 @@ function fetchQuote(symbol) {
         reject(error);
       }
 
-      data.symbol = symbol;
+      if (data !== null) data.symbol = symbol;
 
       resolve(data);
     });
   });
 }
 
+function prepareData(quote) {
+  return [
+    quote.symbol,
+    `$${quote.c}`,
+    `$${quote.h}`,
+    `$${quote.l}`,
+    colorNumberMessage(quote.d.toFixed(2), { prefix: '$' }),
+    colorNumberMessage(quote.dp.toFixed(2), { suffix: '%' }),
+  ];
+}
+
+function colorNumberMessage(number, { prefix = '', suffix = '' }) {
+  if (number > 0) {
+    return success(`${prefix}${number}${suffix}`);
+  } else if (number < 0) {
+    return error(`${prefix}${number}${suffix}`);
+  } else {
+    return `${prefix}${number}${suffix}`;
+  }
+}
+
 function logTable(data) {
-  data.unshift(HEADERS);
+  data.unshift(headers);
 
   console.log(table(data, tableConfig));
 }

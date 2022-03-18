@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
 import { Command } from 'commander';
 import { stonks, fetch } from '../src/commands/stonks/general.js';
 import { add, remove, logWatchlist } from '../src/commands/stonks/watchlist.js';
 
 const program = new Command();
-
-console.log(chalk.blue('Smolly starting up!'));
 
 const stonksCommand = program
   .command('stonks')
