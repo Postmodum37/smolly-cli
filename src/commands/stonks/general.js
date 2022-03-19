@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { table } from 'table';
 import finnhub from 'finnhub';
 import { success, error } from '../../utils/colors.js';
@@ -16,7 +17,7 @@ const headers = [
 
 // Finnhub API client setup
 const api_key = finnhub.ApiClient.instance.authentications['api_key'];
-api_key.apiKey = 'test-api-key';
+api_key.apiKey = process.env.FINNHUB_API_KEY;
 const finnhubClient = new finnhub.DefaultApi();
 
 // Table logging configuration
