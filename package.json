@@ -20,6 +20,7 @@
     "chalk": "^5.0.1",
     "commander": "^9.0.0",
     "conf": "^10.1.1",
+    "dateformat": "^5.0.3",
     "dotenv": "^16.0.0",
     "finnhub": "^1.2.12",
     "table": "^6.8.0"

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+import 'dotenv/config';
 import { Command } from 'commander';
+import { curry } from '../src/commands/curry/general.js';
 import { stonks, fetch } from '../src/commands/stonks/general.js';
 import { add, remove, logWatchlist } from '../src/commands/stonks/watchlist.js';
 
@@ -30,5 +32,10 @@ stonksCommand
   .argument('<symbol>', 'Symbol of the stock')
   .description('Fetches current data about the stock')
   .action((symbol) => fetch(symbol));
+
+program
+  .command('curry')
+  .description('Get currency information')
+  .action(() => curry());
 
 program.parse();

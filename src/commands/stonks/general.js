@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { table } from 'table';
 import finnhub from 'finnhub';
 import { success, error } from '../../utils/colors.js';
