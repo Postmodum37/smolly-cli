@@ -1,8 +1,12 @@
-## Installation:
-
+## Install:
 1. Set API keys mentioned in `.env.example` file
 2. Install globally - `npm install -g .`
-3. Uninstall globally - `npm uninstall -g smolly-cli`
+
+## Usage:
+Start using by typing `smolly`
+
+## Uninstall:
+Uninstall globally - `npm uninstall -g smolly-cli`
 
 
 ### TODO list:
