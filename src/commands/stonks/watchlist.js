@@ -1,13 +1,11 @@
-import Conf from 'conf';
 import chalk from 'chalk';
-
-const config = new Conf({ projectName: 'smolly-cli' });
+import { storageConfig } from '../../utils/storage.js';
 
 export function add(symbol) {
   symbol = symbol.toUpperCase();
   console.log(`Adding ${symbol} to the watchlist`);
 
-  config.set('watchlist', [...new Set([...getWatchlist(), symbol])]);
+  storageConfig.set('watchlist', [...new Set([...getWatchlist(), symbol])]);
 
   logWatchlist();
 }
@@ -16,7 +14,7 @@ export function remove(symbol) {
   symbol = symbol.toUpperCase();
   console.log(`Removing ${symbol} from the watchlist`);
 
-  config.set(
+  storageConfig.set(
     'watchlist',
     getWatchlist().filter((item) => item !== symbol)
   );
@@ -33,5 +31,5 @@ export function logWatchlist() {
 }
 
 export function getWatchlist() {
-  return config.get('watchlist') || [];
+  return storageConfig.get('watchlist') || [];
 }

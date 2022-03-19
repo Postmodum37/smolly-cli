@@ -3,6 +3,10 @@
 import 'dotenv/config';
 import { Command } from 'commander';
 import { curry } from '../src/commands/curry/general.js';
+import {
+  setBaseCurrency,
+  setWatchedCurrencies,
+} from '../src/commands/curry/storage.js';
 import { stonks, fetch } from '../src/commands/stonks/general.js';
 import { add, remove, logWatchlist } from '../src/commands/stonks/watchlist.js';
 
@@ -33,9 +37,21 @@ stonksCommand
   .description('Fetches current data about the stock')
   .action((symbol) => fetch(symbol));
 
-program
+const curryCommand = program
   .command('curry')
   .description('Get currency information')
   .action(() => curry());
+
+curryCommand
+  .command('base')
+  .argument('<currency>', 'Currency code')
+  .description('Set base currency')
+  .action((currency) => setBaseCurrency(currency));
+
+curryCommand
+  .command('watched')
+  .argument('<currencies>', 'Currency codes')
+  .description('Set watched currencies, separated by comma')
+  .action((currencies) => setWatchedCurrencies(currencies));
 
 program.parse();

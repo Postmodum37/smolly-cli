@@ -2,14 +2,18 @@ import axios from 'axios';
 import chalk from 'chalk';
 import { table } from 'table';
 import { fullDate } from '../../utils/formatting.js';
+import { storageConfig } from '../../utils/storage.js';
 
 const baseUrl = `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGERATE_API_KEY}`;
-const defaultCurrencies = ['EUR', 'PLN'];
-const defaultBaseCurrency = 'USD';
+const watchedCurrencies = storageConfig.get('watchedCurrencies') || [
+  'EUR',
+  'PLN',
+];
+const baseCurrency = storageConfig.get('baseCurrency') || 'USD';
 
 export function curry() {
   axios
-    .get(baseUrl + `/latest/${defaultBaseCurrency}`, {
+    .get(baseUrl + `/latest/${baseCurrency}`, {
       validateStatus: (status) => status === 200,
     })
     .then(({ data }) => {
@@ -29,7 +33,7 @@ function logCurrentData(data) {
   );
   console.log(`Base currency: ${chalk.bold(data.base_code)}`);
 
-  const tableData = defaultCurrencies.map((symbol) => {
+  const tableData = watchedCurrencies.map((symbol) => {
     return [symbol, chalk.bold(data.conversion_rates[symbol])];
   });
 
